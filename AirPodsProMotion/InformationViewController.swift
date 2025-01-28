@@ -1,139 +1,108 @@
 //
-//  ViewController.swift
+//  InformationViewController.swift
 //  AirPodsProMotion
-//
 //
 
 import UIKit
 import CoreMotion
 
-class InformationViewController: UIViewController, CMHeadphoneMotionManagerDelegate {
+enum ConfigurationType {
+    case periocular
+    case head
+    case facial
+}
 
-    lazy var textView: UITextView = {
-        let view = UITextView()
-        view.frame = CGRect(x: self.view.bounds.minX + (self.view.bounds.width / 10),
-                            y: self.view.bounds.minY + (self.view.bounds.height / 6),
-                            width: self.view.bounds.width, height: self.view.bounds.height)
-        view.text = "Looking for AirPods Pro"
-        view.font = view.font?.withSize(14)
-        view.isEditable = false
-        return view
-    }()
-    
+class InformationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    
-    lazy var button1: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Visualise", for: .normal)
-        // Add additional styling here
-        button.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
-        return button
-    }()
+    // MARK: - Properties
 
-    lazy var button2: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Record", for: .normal)
-        // Add additional styling here
-        button.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
-        return button
+    var configurationType: ConfigurationType?
+
+    var doubleTapActions: [String] = []
+    var quadrupleTapActions: [String] = []
+    var enabledDoubleTaps: [Bool] = []
+    var enabledQuadrupleTaps: [Bool] = []
+
+    lazy var configurationTableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ToggleCell.self, forCellReuseIdentifier: ToggleCell.identifier)
+        return tableView
     }()
 
-    
-    
-    
-    //AirPods Pro => APP :)
-    let APP = CMHeadphoneMotionManager()
-    
-    
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "IMU Data"
         view.backgroundColor = .systemBackground
-        view.addSubview(textView)
+        setupTableView()
+        loadConfiguration()
+    }
 
-        view.addSubview(button1)
-        view.addSubview(button2)
-
-        button1.translatesAutoresizingMaskIntoConstraints = false
-        button2.translatesAutoresizingMaskIntoConstraints = false
-
+    private func setupTableView() {
+        view.addSubview(configurationTableView)
+        configurationTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            button1.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-
-            button2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            button2.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            configurationTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            configurationTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            configurationTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            configurationTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
 
-        
-        
-        APP.delegate = self
-        
-        guard APP.isDeviceMotionAvailable else {
-            AlertView.alert(self, "Sorry", "Your device is not supported.")
-            textView.text = "Sorry, Your device is not supported."
-            return
+    private func loadConfiguration() {
+        switch configurationType {
+        case .periocular:
+            doubleTapActions = ["Pause / Play", "Next Song"]
+            quadrupleTapActions = ["Brightness Up", "Brightness Down"]
+            enabledDoubleTaps = [true, false]
+            enabledQuadrupleTaps = [false, true]
+        case .head:
+            doubleTapActions = ["Activate Siri", "Volume Up"]
+            quadrupleTapActions = ["Volume Down", "Toggle Flashlight"]
+            enabledDoubleTaps = [false, true]
+            enabledQuadrupleTaps = [true, false]
+        case .facial:
+            doubleTapActions = ["Mute Mic", "Answer Call"]
+            quadrupleTapActions = ["Reject Call", "End Call"]
+            enabledDoubleTaps = [true, false]
+            enabledQuadrupleTaps = [false, true]
+        default:
+            doubleTapActions = []
+            quadrupleTapActions = []
         }
-        
-        APP.startDeviceMotionUpdates(to: OperationQueue.current!, withHandler: {[weak self] motion, error  in
-            guard let motion = motion, error == nil else { return }
-            self?.printData(motion)
-        })
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.viewDidLoad()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        APP.stopDeviceMotionUpdates()
-    }
-    
-    @objc func button1Action() {
-        // Navigate to Option B
-        let optionBViewController = SK3DViewController()
-        self.navigationController?.pushViewController(optionBViewController, animated: true)
     }
 
-    @objc func button2Action() {
-        // Navigate to Option D
-        let optionDViewController = ExportCSVViewController()
-        self.navigationController?.pushViewController(optionDViewController, animated: true)
+    // MARK: - TableView DataSource
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
 
-    
-    
-    func printData(_ data: CMDeviceMotion) {
-        print(data)
-        self.textView.text = """
-            Quaternion:
-                x: \(data.attitude.quaternion.x)
-                y: \(data.attitude.quaternion.y)
-                z: \(data.attitude.quaternion.z)
-                w: \(data.attitude.quaternion.w)
-            Attitude:
-                pitch: \(data.attitude.pitch)
-                roll: \(data.attitude.roll)
-                yaw: \(data.attitude.yaw)
-            Gravitational Acceleration:
-                x: \(data.gravity.x)
-                y: \(data.gravity.y)
-                z: \(data.gravity.z)
-            Rotation Rate:
-                x: \(data.rotationRate.x)
-                y: \(data.rotationRate.y)
-                z: \(data.rotationRate.z)
-            Acceleration:
-                x: \(data.userAcceleration.x)
-                y: \(data.userAcceleration.y)
-                z: \(data.userAcceleration.z)
-            Magnetic Field:
-                field: \(data.magneticField.field)
-                accuracy: \(data.magneticField.accuracy)
-            Heading:
-                \(data.heading)
-            """
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return section == 0 ? doubleTapActions.count : quadrupleTapActions.count
     }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ToggleCell.identifier, for: indexPath) as? ToggleCell else {
+            fatalError("Failed to dequeue ToggleCell")
+        }
+        let actionName = indexPath.section == 0 ? doubleTapActions[indexPath.row] : quadrupleTapActions[indexPath.row]
+        let isEnabled = indexPath.section == 0 ? enabledDoubleTaps[indexPath.row] : enabledQuadrupleTaps[indexPath.row]
+
+        cell.configure(with: actionName, isEnabled: isEnabled) { isOn in
+            if indexPath.section == 0 {
+                self.enabledDoubleTaps[indexPath.row] = isOn
+            } else {
+                self.enabledQuadrupleTaps[indexPath.row] = isOn
+            }
+        }
+        return cell
+    }
+
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return section == 0 ? "Double Tap Actions" : "Quadruple Tap Actions"
+    }
 }
