@@ -24,6 +24,8 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera for the live feed above the music player.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Used to acquire motion for AirPods.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -64,9 +66,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    
-    <key>NSCameraUsageDescription</key>
-    <string>We need access to your camera for the live feed above the music player.</string>
-
 </dict>
 </plist>
