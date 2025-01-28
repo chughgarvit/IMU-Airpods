@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E6AEDC72D492E300060226A /* MotionDataExporterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AEDC62D492E300060226A /* MotionDataExporterViewController.swift */; };
 		6E9F88242D48D83F00125F58 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9F88232D48D83B00125F58 /* IntroViewController.swift */; };
 		6E9F88262D48DCBE00125F58 /* MusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9F88252D48DCBD00125F58 /* MusicPlayerViewController.swift */; };
 		6E9F882E2D48E05500125F58 /* Snowchild.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6E9F882B2D48E05500125F58 /* Snowchild.mp3 */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E6AEDC62D492E300060226A /* MotionDataExporterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionDataExporterViewController.swift; sourceTree = "<group>"; };
 		6E9F88232D48D83B00125F58 /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		6E9F88252D48DCBD00125F58 /* MusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewController.swift; sourceTree = "<group>"; };
 		6E9F88272D48E05500125F58 /* Blinding Lights.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Blinding Lights.mp3"; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 		8E4A85D7251A37600077CDAC /* IMUSensing */ = {
 			isa = PBXGroup;
 			children = (
+				6E6AEDC62D492E300060226A /* MotionDataExporterViewController.swift */,
 				6EDA94722D49262E00C9928F /* ToggleCell.swift */,
 				6E9F88252D48DCBD00125F58 /* MusicPlayerViewController.swift */,
 				6E9F88232D48D83B00125F58 /* IntroViewController.swift */,
@@ -209,6 +212,7 @@
 				8E4A85DB251A37600077CDAC /* SceneDelegate.swift in Sources */,
 				6E9F88262D48DCBE00125F58 /* MusicPlayerViewController.swift in Sources */,
 				8EF9EA05251B690C00D239C4 /* SK3DViewController.swift in Sources */,
+				6E6AEDC72D492E300060226A /* MotionDataExporterViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
