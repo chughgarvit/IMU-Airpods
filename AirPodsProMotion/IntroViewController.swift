@@ -1,6 +1,5 @@
 //
 //  IntroViewController.swift
-//  AirPodsProMotion
 //
 
 import UIKit

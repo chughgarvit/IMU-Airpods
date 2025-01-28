@@ -2,6 +2,7 @@
 //  SK3DViewController.swift
 //  AirPodsProMotion
 //
+//
 
 import UIKit
 import SceneKit
@@ -9,7 +10,9 @@ import CoreMotion
 
 class SK3DViewController: UIViewController, CMHeadphoneMotionManagerDelegate {
     
+    //AirPods Pro => APP :)
     let APP = CMHeadphoneMotionManager()
+    // cube
     var cubeNode: SCNNode!
     
     override func viewDidLoad() {
@@ -41,12 +44,14 @@ class SK3DViewController: UIViewController, CMHeadphoneMotionManagerDelegate {
         APP.stopDeviceMotionUpdates()
     }
     
+    
     func NodeRotate(_ motion: CMDeviceMotion) {
         let data = motion.attitude
 
         cubeNode.eulerAngles = SCNVector3(-data.pitch, -data.yaw, -data.roll)
     }
 }
+
 
 // SceneKit
 extension SK3DViewController {
@@ -76,7 +81,7 @@ extension SK3DViewController {
         omniLightNode.position = SCNVector3(x: 0, y: 10, z: 10)
         scene.rootNode.addChildNode(omniLightNode)
 
-        // Adding an ambient light source
+        // Adding a light source to your scene that illuminates from all directions.
         let ambientLight = SCNLight()
         ambientLight.type = .ambient
         ambientLight.color = UIColor.darkGray
@@ -84,60 +89,30 @@ extension SK3DViewController {
         ambientLightNode.light = ambientLight
         scene.rootNode.addChildNode(ambientLightNode)
 
-        // Adding an animal face
-        let face: SCNGeometry = SCNSphere(radius: 3.0) // Animal face as a sphere
-        let leftEar: SCNGeometry = SCNCone(topRadius: 0.3, bottomRadius: 1.0, height: 2.0) // Cone for ears
-        let rightEar: SCNGeometry = SCNCone(topRadius: 0.3, bottomRadius: 1.0, height: 2.0) // Cone for ears
-        let nose: SCNGeometry = SCNSphere(radius: 0.5) // Nose as a small sphere
-        let mouth: SCNGeometry = SCNCapsule(capRadius: 0.3, height: 1.0) // Capsule for a mouth
-        let leftEye: SCNGeometry = SCNSphere(radius: 0.3) // Left eye as a small sphere
-        let rightEye: SCNGeometry = SCNSphere(radius: 0.3) // Right eye as a small sphere
-
-        let faceNode = SCNNode(geometry: face)
-        faceNode.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
-
-        // Ears
-        let leftEarNode = SCNNode(geometry: leftEar)
-        leftEarNode.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
-        leftEarNode.position = SCNVector3(x: -2.5, y: 3.5, z: 0)
-        leftEarNode.eulerAngles = SCNVector3(x: -0.5, y: 0, z: -0.3)
-
-        let rightEarNode = SCNNode(geometry: rightEar)
-        rightEarNode.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
-        rightEarNode.position = SCNVector3(x: 2.5, y: 3.5, z: 0)
-        rightEarNode.eulerAngles = SCNVector3(x: -0.5, y: 0, z: 0.3)
-
-        // Eyes
-        let leftEyeNode = SCNNode(geometry: leftEye)
-        leftEyeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.white
-        leftEyeNode.position = SCNVector3(x: -1.0, y: 1.0, z: 2.8)
-
-        let rightEyeNode = SCNNode(geometry: rightEye)
-        rightEyeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.white
-        rightEyeNode.position = SCNVector3(x: 1.0, y: 1.0, z: 2.8)
-
-        // Nose
+    
+        // Adding a cube(face) to a scene
+        let cube:SCNGeometry = SCNBox(width: 3, height: 3, length: 3, chamferRadius: 0.5)
+        let eye:SCNGeometry = SCNSphere(radius: 0.3)
+        let leftEye = SCNNode(geometry: eye)
+        let rightEye = SCNNode(geometry: eye)
+        leftEye.position = SCNVector3(x: 0.6, y: 0.6, z: 1.5)
+        rightEye.position = SCNVector3(x: -0.6, y: 0.6, z: 1.5)
+        
+        let nose:SCNGeometry = SCNSphere(radius: 0.3)
         let noseNode = SCNNode(geometry: nose)
-        noseNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
-        noseNode.position = SCNVector3(x: 0, y: 0.5, z: 2.8)
-
-        // Mouth
+        noseNode.position = SCNVector3(x: 0, y: 0, z: 1.5)
+        
+        let mouth:SCNGeometry = SCNBox(width: 1.5, height: 0.2, length: 0.2, chamferRadius: 0.4)
         let mouthNode = SCNNode(geometry: mouth)
-        mouthNode.geometry?.firstMaterial?.diffuse.contents = UIColor.systemPink
-        mouthNode.position = SCNVector3(x: 0, y: -1.0, z: 2.8)
-        mouthNode.eulerAngles = SCNVector3(x: 0, y: 0, z: 0)
-
-        // Combine all parts
-        cubeNode = SCNNode()
-        cubeNode.addChildNode(faceNode)
-        cubeNode.addChildNode(leftEarNode)
-        cubeNode.addChildNode(rightEarNode)
-        cubeNode.addChildNode(leftEyeNode)
-        cubeNode.addChildNode(rightEyeNode)
+        mouthNode.position = SCNVector3(x: 0, y: -0.6, z: 1.5)
+        
+        
+        cubeNode = SCNNode(geometry: cube)
+        cubeNode.addChildNode(leftEye)
+        cubeNode.addChildNode(rightEye)
         cubeNode.addChildNode(noseNode)
         cubeNode.addChildNode(mouthNode)
         cubeNode.position = SCNVector3(x: 0, y: 0, z: 0)
-
         scene.rootNode.addChildNode(cubeNode)
     }
 }

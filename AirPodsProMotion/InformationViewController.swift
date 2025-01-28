@@ -1,6 +1,5 @@
 //
 //  InformationViewController.swift
-//  AirPodsProMotion
 //
 
 import UIKit
